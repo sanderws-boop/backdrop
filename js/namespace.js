@@ -10,7 +10,7 @@
         gl: null,
         canvas: null,
         VERSION: "1.0.0",
-        NAME: "Studio Pro"
+        NAME: "Backdrop"
     };
 
     // Central event bus

@@ -1,8 +1,8 @@
-# Studio Pro
+# Backdrop
 
 A professional generative background engine built entirely with vanilla HTML, CSS and WebGL2. No frameworks, no build tools — just open `index.html` and create.
 
-**[Live Demo](https://sanderws-boop.github.io/studiopro/)**
+**[Live Demo](https://sanderws-boop.github.io/backdrop/)**
 
 ## Features
 
@@ -19,7 +19,7 @@ A professional generative background engine built entirely with vanilla HTML, CS
 
 Open `index.html` in any modern browser. That's it.
 
-Or visit the [live demo](https://sanderws-boop.github.io/studiopro/).
+Or visit the [live demo](https://sanderws-boop.github.io/backdrop/).
 
 ## Keyboard Shortcuts
 

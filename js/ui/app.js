@@ -7,34 +7,34 @@
         init: function() {
             if (this._initialized) return;
             this._initialized = true;
-            console.log('[Studio Pro] Initializing...');
+            console.log('[Backdrop] Initializing...');
 
             var canvas = document.getElementById('glcanvas');
             if (!canvas) {
-                console.error('[Studio Pro] Canvas not found');
+                console.error('[Backdrop] Canvas not found');
                 return;
             }
 
             // Initialize GL Engine
             try {
                 Studio.Core.GLEngine.init(canvas);
-                console.log('[Studio Pro] WebGL2 engine initialized');
+                console.log('[Backdrop] WebGL2 engine initialized');
             } catch (e) {
-                console.error('[Studio Pro] WebGL2 init failed:', e);
+                console.error('[Backdrop] WebGL2 init failed:', e);
                 document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#111;font-family:system-ui;flex-direction:column;gap:12px"><h1>WebGL2 Required</h1><p>Your browser does not support WebGL2. Please use a modern browser.</p></div>';
                 return;
             }
 
             // Initialize state with default layer
             Studio.Systems.State.init();
-            console.log('[Studio Pro] State initialized');
+            console.log('[Backdrop] State initialized');
 
             // Initialize history
             Studio.Systems.History.init();
 
             // Initialize render pipeline
             Studio.Core.RenderPipeline.init(canvas);
-            console.log('[Studio Pro] Render pipeline initialized');
+            console.log('[Backdrop] Render pipeline initialized');
 
             // Initialize UI components (each wrapped individually so one failure doesn't block others)
             var uiComponents = [
@@ -58,10 +58,10 @@
                     uiComponents[ci][1].init();
                 } catch(e) {
                     uiErrors++;
-                    console.error('[Studio Pro] ' + uiComponents[ci][0] + '.init() failed:', e);
+                    console.error('[Backdrop] ' + uiComponents[ci][0] + '.init() failed:', e);
                 }
             }
-            console.log('[Studio Pro] UI initialized' + (uiErrors ? ' (' + uiErrors + ' errors)' : ''));
+            console.log('[Backdrop] UI initialized' + (uiErrors ? ' (' + uiErrors + ' errors)' : ''));
 
             // Handle window resize
             var resizeTimeout;
@@ -91,10 +91,10 @@
             // Try restore session
             try {
                 if (Studio.Systems.Project.restoreSession()) {
-                    console.log('[Studio Pro] Session restored');
+                    console.log('[Backdrop] Session restored');
                 }
             } catch(e) {
-                console.error('[Studio Pro] Session restore error:', e);
+                console.error('[Backdrop] Session restore error:', e);
             }
 
             // Auto-save session periodically
@@ -107,14 +107,14 @@
 
             // Start rendering
             Studio.Core.RenderPipeline.start();
-            console.log('[Studio Pro] Rendering started');
+            console.log('[Backdrop] Rendering started');
 
             // Force all UI panels to sync with current state
             Studio.Events.emit('state:layersChanged');
             Studio.Events.emit('state:layerSelected', Studio.Systems.State.selectedLayerIndex);
 
             // Show welcome toast
-            Studio.UI.Toasts.show('Studio Pro loaded — Press ? for shortcuts', 'info', 4000);
+            Studio.UI.Toasts.show('Backdrop loaded — Press ? for shortcuts', 'info', 4000);
 
             // Build shortcuts overlay content
             var shortcutsContent = document.getElementById('shortcuts-content');

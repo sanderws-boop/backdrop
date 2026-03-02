@@ -133,7 +133,7 @@
             this._copyProg = this.buildProgram(Studio.Shaders.Vertex, Studio.Shaders.PostExtras.copy);
 
             var compiled = this._patternPrograms.filter(function(p) { return p !== null; }).length;
-            console.log('Studio Pro: compiled ' + compiled + '/' + allPatterns.length + ' patterns');
+            console.log('Backdrop: compiled ' + compiled + '/' + allPatterns.length + ' patterns');
         },
 
         getPatternProgram: function(idx) {

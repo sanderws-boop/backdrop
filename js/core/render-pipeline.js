@@ -148,7 +148,7 @@
             try {
                 self._tick(now);
             } catch(e) {
-                console.error('[Studio Pro] Render error:', e);
+                console.error('[Backdrop] Render error:', e);
             }
             requestAnimationFrame(self.loop);
         },

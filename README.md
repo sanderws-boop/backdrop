@@ -39,3 +39,8 @@ Or visit the [live demo](https://sanderws-boop.github.io/studiopro/).
 - **Vanilla JS** — No frameworks, IIFE namespace pattern
 - **Web Audio API** — Microphone input, FFT analysis, beat detection
 - **Zero dependencies** — Runs from `file://` or any static host
+
+## Contributors
+
+- [sanderws-boop](https://github.com/sanderws-boop)
+- [@poaster_](https://x.com/poaster_)

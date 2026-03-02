@@ -40,6 +40,10 @@ Or visit the [live demo](https://sanderws-boop.github.io/backdrop/).
 - **Web Audio API** — Microphone input, FFT analysis, beat detection
 - **Zero dependencies** — Runs from `file://` or any static host
 
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
+
 ## Contributors
 
 - [sanderws-boop](https://github.com/sanderws-boop)

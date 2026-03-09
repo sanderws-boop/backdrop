@@ -163,9 +163,7 @@
 
         _updatePlayhead: function(time) {
             if (!playheadEl || isDraggingPlayhead) return;
-            var duration = Studio.Systems.State.timeline.duration;
-            var loopTime = time % duration;
-            var x = loopTime * pixelsPerSecond;
+            var x = time * pixelsPerSecond;
             playheadEl.style.left = x + 'px';
         },
 
@@ -194,7 +192,7 @@
 
             var currentTime = 0;
             if (Studio.Core.RenderPipeline && Studio.Core.RenderPipeline.getCurrentTime) {
-                currentTime = Studio.Core.RenderPipeline.getCurrentTime() % state.timeline.duration;
+                currentTime = Studio.Core.RenderPipeline.getCurrentTime();
             }
 
             // Add keyframes for main params

@@ -130,6 +130,15 @@
                     var dt = (now - anim.lastFrame) / 1000;
                     if (dt > 0.1) dt = 0.016;
                     anim.time += dt * anim.speed;
+
+                    // Wrap time within timeline duration
+                    var tl = Studio.Systems.State.timeline;
+                    if (tl.looping && tl.duration > 0) {
+                        anim.time = anim.time % tl.duration;
+                    } else if (tl.duration > 0) {
+                        anim.time = Math.min(anim.time, tl.duration);
+                    }
+
                     Studio.Systems.State.timeline.currentTime = anim.time;
                 }
                 anim.lastFrame = now;

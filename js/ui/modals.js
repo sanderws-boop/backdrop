@@ -86,6 +86,10 @@
             var webmBtn = exportModal.querySelector('#btn-export-webm');
             var webmDur = exportModal.querySelector('#webm-duration');
             var webmFps = exportModal.querySelector('#webm-fps');
+            // Sync WebM duration with timeline duration
+            if (webmDur) {
+                webmDur.value = Studio.Systems.State.timeline.duration;
+            }
             if (webmBtn) {
                 webmBtn.addEventListener('click', function() {
                     var dur = webmDur ? parseInt(webmDur.value, 10) : 5;
@@ -100,13 +104,17 @@
             var gifBtn = exportModal.querySelector('#btn-export-gif');
             var gifDur = exportModal.querySelector('#gif-duration');
             var gifSize = exportModal.querySelector('#gif-size');
+            // Sync GIF duration with timeline duration
+            if (gifDur) {
+                gifDur.value = Studio.Systems.State.timeline.duration;
+            }
             if (gifBtn) {
                 gifBtn.addEventListener('click', function() {
                     var dur = gifDur ? parseInt(gifDur.value, 10) : 3;
                     var size = gifSize ? parseInt(gifSize.value, 10) : 1280;
                     var h = Math.round(size * 9 / 16);
                     Studio.UI.Toasts.show('Encoding GIF (' + size + 'x' + h + ', ' + dur + 's)...', 'info');
-                    Studio.Systems.Export.exportGIF(size, 15, dur);
+                    Studio.Systems.Export.exportGIF(size, 24, dur);
                     self.closeAll();
                 });
             }
@@ -116,7 +124,7 @@
                     var w = parseInt(gifSize.value, 10) || 1280;
                     var h = Math.round(w * 9 / 16);
                     var dur = parseFloat(gifDur.value) || 3;
-                    var fps = 15;
+                    var fps = 24;
                     var frames = Math.ceil(fps * dur);
                     var rawBytes = w * h * frames;
                     var estBytes = rawBytes * 0.5;

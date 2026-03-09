@@ -57,7 +57,6 @@
                 };
 
                 recorder.start();
-                var startTime = pipeline.anim.time;
                 var frameCount = Math.round(fps * duration);
                 var frameIndex = 0;
 
@@ -66,7 +65,7 @@
                         recorder.stop();
                         return;
                     }
-                    var t = startTime + (frameIndex / fps);
+                    var t = frameIndex / fps;
                     pipeline.render(t);
                     gl.finish();
                     if (track.requestFrame) track.requestFrame();
@@ -95,13 +94,11 @@
 
             var pixels = new Uint8Array(width * gifH * 4);
             var rawFrames = [];
-            var startTime = pipeline.anim.time;
-
             return new Promise(function(resolve) {
                 var i = 0;
                 function captureFrame() {
                     if (i >= frameCount) { processFrames(); return; }
-                    var t = startTime + (i / fps);
+                    var t = i / fps;
                     pipeline.render(t);
                     gl.finish();
                     gl.readPixels(0, 0, width, gifH, gl.RGBA, gl.UNSIGNED_BYTE, pixels);

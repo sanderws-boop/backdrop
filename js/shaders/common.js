@@ -181,8 +181,8 @@ float compositionWeight(vec2 uv, vec2 focal) {
 float organicTime(float t, float rate, float breathe) {
     if (u_loopDuration > 0.0) {
         float p = t * 6.28318 / u_loopDuration;
-        return cos(p) * rate + cos(p * 2.0) * rate * 0.5
-             + cos(p * 3.0) * breathe + cos(p * 5.0) * breathe * 0.5;
+        return cos(p) * rate * 0.3 + cos(p * 2.0) * rate * 0.15
+             + cos(p * 3.0) * breathe * 0.3 + cos(p * 5.0) * breathe * 0.15;
     }
     return t * rate + sin(t * rate * 0.3) * breathe + sin(t * rate * 0.7) * breathe * 0.5;
 }
@@ -191,7 +191,12 @@ vec2 rotateP(vec2 p, float asp) {
     p -= c;
     float ca = cos(u_angle), sa = sin(u_angle);
     p = vec2(ca*p.x - sa*p.y, sa*p.x + ca*p.y);
-    return p + c;
+    p += c;
+    if (u_loopDuration > 0.0) {
+        float lp = u_time * 6.28318 / u_loopDuration;
+        p += vec2(cos(lp), sin(lp)) * 0.12;
+    }
+    return p;
 }
 
 vec3 acesTonemap(vec3 x) {

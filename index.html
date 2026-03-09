@@ -153,7 +153,6 @@
                 <label class="timeline-dur-label">Duration:
                     <input type="number" id="timeline-duration" min="1" max="10" step="1" value="4" class="timeline-dur-input"> s
                 </label>
-                <button class="btn btn-sm" id="btn-add-keyframe" title="Add Keyframe">+ Key</button>
             </div>
         </div>
         <div class="timeline-body">
@@ -214,7 +213,7 @@
                 </div>
                 <div class="param-row">
                     <label class="param-label">Duration (seconds)</label>
-                    <input type="number" id="gif-duration" class="param-value" value="3" min="1" max="30">
+                    <input type="number" id="gif-duration" class="param-value" value="4" min="1" max="10">
                 </div>
                 <div id="gif-size-estimate" style="color: var(--text-secondary); font-size: 11px; text-align: center; padding: 8px 0;"></div>
                 <button class="btn btn-primary btn-block" id="btn-export-gif">Export GIF</button>
@@ -238,46 +237,46 @@
 
 <!-- ===== SCRIPTS (load order matters) ===== -->
 <!-- Namespace (first) -->
-<script src="js/namespace.js?v=3"></script>
+<script src="js/namespace.js?v=4"></script>
 
 <!-- Shaders -->
-<script src="js/shaders/common.js?v=3"></script>
-<script src="js/shaders/vertex.js?v=3"></script>
-<script src="js/shaders/patterns-classic.js?v=3"></script>
-<script src="js/shaders/post-composite.js?v=3"></script>
-<script src="js/shaders/post-extras.js?v=3"></script>
+<script src="js/shaders/common.js?v=4"></script>
+<script src="js/shaders/vertex.js?v=4"></script>
+<script src="js/shaders/patterns-classic.js?v=4"></script>
+<script src="js/shaders/post-composite.js?v=4"></script>
+<script src="js/shaders/post-extras.js?v=4"></script>
 
 <!-- Data -->
-<script src="js/data/palettes.js?v=3"></script>
-<script src="js/data/easing.js?v=3"></script>
+<script src="js/data/palettes.js?v=4"></script>
+<script src="js/data/easing.js?v=4"></script>
 
 <!-- Core Engine -->
-<script src="js/core/gl-engine.js?v=3"></script>
-<script src="js/core/post-processing.js?v=3"></script>
-<script src="js/core/render-pipeline.js?v=3"></script>
+<script src="js/core/gl-engine.js?v=4"></script>
+<script src="js/core/post-processing.js?v=4"></script>
+<script src="js/core/render-pipeline.js?v=4"></script>
 
 <!-- Systems -->
-<script src="js/systems/state.js?v=3"></script>
-<script src="js/systems/history.js?v=3"></script>
-<script src="js/systems/timeline-engine.js?v=3"></script>
-<script src="js/systems/gif-encoder.js?v=3"></script>
-<script src="js/systems/export.js?v=3"></script>
-<script src="js/systems/project.js?v=3"></script>
+<script src="js/systems/state.js?v=4"></script>
+<script src="js/systems/history.js?v=4"></script>
+<script src="js/systems/timeline-engine.js?v=4"></script>
+<script src="js/systems/gif-encoder.js?v=4"></script>
+<script src="js/systems/export.js?v=4"></script>
+<script src="js/systems/project.js?v=4"></script>
 
 <!-- UI (order matters: dependencies first) -->
-<script src="js/ui/toasts.js?v=3"></script>
-<script src="js/ui/shortcuts.js?v=3"></script>
-<script src="js/ui/context-menu.js?v=3"></script>
-<script src="js/ui/toolbar.js?v=3"></script>
-<script src="js/ui/command-palette.js?v=3"></script>
-<script src="js/ui/pattern-browser.js?v=3"></script>
-<script src="js/ui/palette-editor.js?v=3"></script>
-<script src="js/ui/properties-panel.js?v=3"></script>
-<script src="js/ui/timeline-ui.js?v=3"></script>
-<script src="js/ui/modals.js?v=3"></script>
+<script src="js/ui/toasts.js?v=4"></script>
+<script src="js/ui/shortcuts.js?v=4"></script>
+<script src="js/ui/context-menu.js?v=4"></script>
+<script src="js/ui/toolbar.js?v=4"></script>
+<script src="js/ui/command-palette.js?v=4"></script>
+<script src="js/ui/pattern-browser.js?v=4"></script>
+<script src="js/ui/palette-editor.js?v=4"></script>
+<script src="js/ui/properties-panel.js?v=4"></script>
+<script src="js/ui/timeline-ui.js?v=4"></script>
+<script src="js/ui/modals.js?v=4"></script>
 
 <!-- App init (LAST) -->
-<script src="js/ui/app.js?v=3"></script>
+<script src="js/ui/app.js?v=4"></script>
 
 </body>
 </html>

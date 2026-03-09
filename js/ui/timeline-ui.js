@@ -6,6 +6,14 @@
     var scrollOffset = 0;
     var isDraggingPlayhead = false;
 
+    function calcPixelsPerSecond() {
+        var body = document.querySelector('.timeline-body');
+        if (!body) return 60;
+        var w = body.clientWidth - 80; // subtract track label width
+        var dur = Studio.Systems.State.timeline.duration || 4;
+        return Math.max(40, w / dur);
+    }
+
     Studio.UI.TimelineUI = {
         init: function() {
             var self = this;
@@ -66,11 +74,13 @@
             Studio.Events.on('state:layerSelected', function() { self.render(); });
             Studio.Events.on('state:timelineChanged', function() { self.render(); });
             Studio.Events.on('render:frame', function(time) { self._updatePlayhead(time); });
+            window.addEventListener('resize', function() { self.render(); });
 
             this.render();
         },
 
         render: function() {
+            pixelsPerSecond = calcPixelsPerSecond();
             this._drawRuler();
             this._drawTracks();
         },

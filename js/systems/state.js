@@ -28,7 +28,7 @@
         },
 
         timeline: {
-            duration: 10,
+            duration: 4,
             currentTime: 0,
             playing: false,
             speed: 1,

@@ -6,12 +6,12 @@ A professional generative background engine built entirely with vanilla HTML, CS
 
 ## Features
 
-- **8 generative patterns** — Aurora, Plasma, Soft Orbs, Silk Waves, Volumetric Mist, Liquid Metal, Spectral Haze, Petal Drift
+- **7 generative patterns** — Aurora, Plasma, Soft Orbs, Silk Waves, Liquid Metal, Spectral Haze, Petal Drift
 - **Color palette + custom colors** — Obsidian palette with 5 colors, plus custom color editing
 - **Parameters** — Seed, scale, warp, grain per pattern
 - **Timeline animation** — Keyframe any parameter with 6 easing curves
 - **Post-processing** — Film grain, sharpen, ACES tonemapping
-- **Export** — PNG (up to 8K), WebM video, GIF (up to 1920p Full HD), CSS gradients
+- **Export** — PNG (up to 8K), GIF (up to 1920p Full HD)
 - **Workflow** — Undo/redo, command palette (Cmd+K), keyboard shortcuts, project save/load
 
 ## Getting Started

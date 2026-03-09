@@ -22,11 +22,6 @@
             frag: "void main(){\n  vec2 uv=gl_FragCoord.xy/u_resolution;\n  vec2 p=uv;p.x*=u_resolution.x/u_resolution.y;\n  vec2 ps=p*u_scale;\n  float t=u_seed+organicTime(u_time,0.25,0.3);\n  ps.x+=ps.y*1.5;\n  ps.x+=snoise(vec3(ps*.5,t))*u_warp;\n  ps.x+=snoise(vec3(ps*.25,t*.7))*u_warp*.5;\n  float f=sin(ps.x*2.-t)*.5+.5;\n  f*=.85+.15*sin(ps.x*4.+t*1.3);\n  f=smoothstep(.15,.85,f);\n  outputColorRaw(f,uv);\n}"
         },
         {
-            name: "Volumetric Mist",
-            category: "organic",
-            frag: "void main(){\n  vec2 uv=gl_FragCoord.xy/u_resolution;\n  vec2 p=uv;p.x*=u_resolution.x/u_resolution.y;\n  float t=u_seed+organicTime(u_time,0.12,0.4);\n  float density=0.,transmit=1.;\n  for(int i=0;i<10;i++){\n    float fi=float(i),z=fi*0.1;\n    vec3 sp=vec3(p*u_scale*(1.+z*0.5),t+z*2.);\n    sp.xy+=vec2(snoise(vec3(p*0.3,t+z)),snoise(vec3(p*0.3+10.,t+z)))*u_warp*0.3;\n    float d=fbm(sp)*0.5+0.5;\n    d=smoothstep(0.3,0.7,d);\n    density+=d*transmit*exp(-fi*0.3)*0.15;\n    transmit*=1.-d*0.1;\n  }\n  float f=clamp(density,0.,1.);\n  outputColorRaw(f,uv);\n}"
-        },
-        {
             name: "Liquid Metal",
             category: "abstract",
             frag: "float metalScene(vec2 p,float t){\n  float d=100.;\n  float asp=u_resolution.x/u_resolution.y;\n  for(int i=0;i<6;i++){\n    float fi=float(i);\n    vec2 c=vec2(0.5*asp+sin(t*(0.3+fi*0.15)+fi*1.2)*0.3,\n                 0.5+cos(t*(0.25+fi*0.1)+fi*2.5)*0.25);\n    float r=0.12+0.04*sin(t*0.5+fi);\n    d=smin(d,length(p-c)-r,0.15);\n  }\n  return d;\n}\nvoid main(){\n  vec2 uv=gl_FragCoord.xy/u_resolution;\n  vec2 p=uv;p.x*=u_resolution.x/u_resolution.y;\n  float t=u_seed+organicTime(u_time,0.25,0.4);\n  p+=vec2(snoise(vec3(p*2.,t)),snoise(vec3(p*2.+10.,t)))*u_warp*0.03;\n  float d=metalScene(p,t);\n  float eps=0.003;\n  float dx=metalScene(p+vec2(eps,0),t)-metalScene(p-vec2(eps,0),t);\n  float dy=metalScene(p+vec2(0,eps),t)-metalScene(p-vec2(0,eps),t);\n  vec3 normal=normalize(vec3(-dx,-dy,eps*2.));\n  vec3 lightDir=normalize(vec3(sin(t*0.3)*0.5,cos(t*0.2)*0.5,1.));\n  float diffuse=max(dot(normal,lightDir),0.);\n  vec3 halfDir=normalize(lightDir+vec3(0,0,1));\n  float spec=pow(max(dot(normal,halfDir),0.),64.);\n  float body=smoothstep(0.01,-0.01,d);\n  float f=body*(diffuse*0.6+0.3)+spec*0.5;\n  f=clamp(f,0.,1.);\n  outputColorRaw(f,uv);\n}"

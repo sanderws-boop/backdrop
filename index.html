@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Backdrop — Generative Design Engine</title>
-    <meta name="description" content="Professional generative background engine with layers, timeline animation, audio reactivity, and 26+ patterns">
+    <meta name="description" content="Generative background engine with timeline animation and pattern export">
 
     <!-- CSS -->
     <link rel="stylesheet" href="css/variables.css">
@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="css/toolbar.css">
     <link rel="stylesheet" href="css/panels.css">
     <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/layers.css">
+
     <link rel="stylesheet" href="css/timeline.css">
     <link rel="stylesheet" href="css/modals.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -61,9 +61,7 @@
             <button class="toolbar-btn" id="btn-fullscreen" title="Fullscreen (F)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
             </button>
-            <button class="toolbar-btn" id="btn-audio" title="Audio Reactivity" onclick="Studio.Events.emit('modal:audio')">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-            </button>
+
             <button class="toolbar-btn" id="btn-cmd" title="Command Palette (Ctrl+K)" onclick="Studio.Events.emit('commandPalette:toggle')">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
             </button>
@@ -79,60 +77,46 @@
 
     <!-- ===== LEFT PANEL ===== -->
     <div class="panel-left">
-        <div class="panel-tabs">
-            <button class="panel-tab active" data-tab="patterns">Patterns</button>
-            <button class="panel-tab" data-tab="presets">Presets</button>
+        <div class="panel-header" style="padding: 10px 16px; border-bottom: 1px solid var(--border);">
+            <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">Patterns</span>
         </div>
-        <div class="tab-content active" data-tab="patterns">
-            <div class="panel-content">
-                <!-- Pattern search -->
-                <div class="panel-section">
-                    <div class="pattern-search">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                        <input type="text" id="pattern-search-input" placeholder="Search patterns...">
-                    </div>
-                    <div id="pattern-categories" class="category-pills"></div>
-                    <div id="pattern-grid" class="pattern-grid"></div>
+        <div class="panel-content">
+            <div class="panel-section">
+                <div class="pattern-search">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="pattern-search-input" placeholder="Search patterns...">
                 </div>
-
-                <!-- Palette section -->
-                <div class="panel-section">
-                    <div class="section-title">
-                        <span>Palettes</span>
-                    </div>
-                    <div id="palette-categories" class="category-pills"></div>
-                    <div id="palette-grid" class="palette-grid"></div>
-                    <div id="custom-colors" class="custom-colors">
-                        <div class="color-input-wrap">
-                            <label>Color 1</label>
-                            <input type="color" value="#050508">
-                        </div>
-                        <div class="color-input-wrap">
-                            <label>Color 2</label>
-                            <input type="color" value="#1a2540">
-                        </div>
-                        <div class="color-input-wrap">
-                            <label>Color 3</label>
-                            <input type="color" value="#2e6080">
-                        </div>
-                        <div class="color-input-wrap">
-                            <label>Color 4</label>
-                            <input type="color" value="#60a0c0">
-                        </div>
-                        <div class="color-input-wrap">
-                            <label>Color 5</label>
-                            <input type="color" value="#a0d0e0">
-                        </div>
-                    </div>
-                </div>
+                <div id="pattern-categories" class="category-pills"></div>
+                <div id="pattern-grid" class="pattern-grid"></div>
             </div>
-        </div>
-        <div class="tab-content" data-tab="presets">
-            <div class="panel-content">
-                <div class="panel-section">
-                    <div class="section-title"><span>Preset Library</span></div>
-                    <div id="preset-categories" class="category-pills"></div>
-                    <div id="preset-grid" class="preset-grid"></div>
+
+            <div class="panel-section">
+                <div class="section-title">
+                    <span>Palettes</span>
+                </div>
+                <div id="palette-categories" class="category-pills"></div>
+                <div id="palette-grid" class="palette-grid"></div>
+                <div id="custom-colors" class="custom-colors">
+                    <div class="color-input-wrap">
+                        <label>Color 1</label>
+                        <input type="color" value="#050508">
+                    </div>
+                    <div class="color-input-wrap">
+                        <label>Color 2</label>
+                        <input type="color" value="#1a2540">
+                    </div>
+                    <div class="color-input-wrap">
+                        <label>Color 3</label>
+                        <input type="color" value="#2e6080">
+                    </div>
+                    <div class="color-input-wrap">
+                        <label>Color 4</label>
+                        <input type="color" value="#60a0c0">
+                    </div>
+                    <div class="color-input-wrap">
+                        <label>Color 5</label>
+                        <input type="color" value="#a0d0e0">
+                    </div>
                 </div>
             </div>
         </div>
@@ -150,25 +134,11 @@
 
     <!-- ===== RIGHT PANEL ===== -->
     <div class="panel-right">
-        <div class="panel-tabs">
-            <button class="panel-tab active" data-tab="layers">Layers</button>
-            <button class="panel-tab" data-tab="properties">Properties</button>
+        <div class="panel-header" style="padding: 10px 16px; border-bottom: 1px solid var(--border);">
+            <span style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-secondary);">Properties</span>
         </div>
-        <div class="tab-content active" data-tab="layers">
-            <div class="panel-content">
-                <div class="panel-section">
-                    <div class="section-title">
-                        <span>Layers</span>
-                        <button class="section-title-action" id="btn-add-layer">+ Add Layer</button>
-                    </div>
-                    <div id="layer-list" class="layer-list"></div>
-                </div>
-            </div>
-        </div>
-        <div class="tab-content" data-tab="properties">
-            <div class="panel-content" id="properties-content">
-                <!-- Properties panel renders here -->
-            </div>
+        <div class="panel-content" id="properties-content">
+            <!-- Properties panel renders here -->
         </div>
     </div>
 
@@ -276,76 +246,6 @@
     </div>
 </div>
 
-<!-- ===== AUDIO MODAL ===== -->
-<div class="modal-overlay" id="audio-modal">
-    <div class="modal">
-        <div class="modal-header">
-            <h2 class="modal-title">Audio Reactivity</h2>
-            <button class="modal-close" onclick="Studio.UI.Modals.closeAll()">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
-        </div>
-        <div class="modal-body">
-            <button class="btn btn-primary btn-block" id="btn-audio-toggle">Enable Microphone</button>
-
-            <div class="panel-section" style="margin-top: 16px;">
-                <div class="section-title"><span>Settings</span></div>
-                <div class="param-row">
-                    <label class="param-label">Sensitivity</label>
-                    <input type="range" class="slider" id="audio-sensitivity" min="0.1" max="5" step="0.1" value="1.5">
-                </div>
-                <div class="param-row">
-                    <label class="param-label">Smoothing</label>
-                    <input type="range" class="slider" id="audio-smoothing" min="0" max="0.99" step="0.01" value="0.8">
-                </div>
-            </div>
-
-            <div class="panel-section" style="margin-top: 16px;">
-                <div class="section-title"><span>Frequency Mapping</span></div>
-
-                <div class="audio-mapping-row" data-band="bass">
-                    <span class="mapping-label">Bass →</span>
-                    <select class="mapping-param select-input">
-                        <option value="none">None</option>
-                        <option value="scale" selected>Scale</option>
-                        <option value="warp">Warp</option>
-                        <option value="seed">Seed</option>
-                        <option value="grain">Grain</option>
-                        <option value="brightness">Brightness</option>
-                    </select>
-                    <input type="range" class="mapping-amount slider" min="0" max="5" step="0.1" value="2">
-                </div>
-
-                <div class="audio-mapping-row" data-band="mids">
-                    <span class="mapping-label">Mids →</span>
-                    <select class="mapping-param select-input">
-                        <option value="none">None</option>
-                        <option value="scale">Scale</option>
-                        <option value="warp" selected>Warp</option>
-                        <option value="seed">Seed</option>
-                        <option value="grain">Grain</option>
-                        <option value="brightness">Brightness</option>
-                    </select>
-                    <input type="range" class="mapping-amount slider" min="0" max="5" step="0.1" value="1">
-                </div>
-
-                <div class="audio-mapping-row" data-band="highs">
-                    <span class="mapping-label">Highs →</span>
-                    <select class="mapping-param select-input">
-                        <option value="none">None</option>
-                        <option value="scale">Scale</option>
-                        <option value="warp">Warp</option>
-                        <option value="seed">Seed</option>
-                        <option value="grain" selected>Grain</option>
-                        <option value="brightness">Brightness</option>
-                    </select>
-                    <input type="range" class="mapping-amount slider" min="0" max="5" step="0.1" value="1.5">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- ===== KEYBOARD SHORTCUTS OVERLAY ===== -->
 <div class="shortcuts-overlay" id="shortcuts-overlay">
     <div class="shortcuts-panel">
@@ -361,55 +261,46 @@
 
 <!-- ===== SCRIPTS (load order matters) ===== -->
 <!-- Namespace (first) -->
-<script src="js/namespace.js"></script>
+<script src="js/namespace.js?v=2"></script>
 
 <!-- Shaders -->
-<script src="js/shaders/common.js"></script>
-<script src="js/shaders/vertex.js"></script>
-<script src="js/shaders/patterns-classic.js"></script>
-<script src="js/shaders/patterns-extended.js"></script>
-<script src="js/shaders/blend-modes.js"></script>
-<script src="js/shaders/post-bloom.js"></script>
-<script src="js/shaders/post-composite.js"></script>
-<script src="js/shaders/post-extras.js"></script>
+<script src="js/shaders/common.js?v=2"></script>
+<script src="js/shaders/vertex.js?v=2"></script>
+<script src="js/shaders/patterns-classic.js?v=2"></script>
+<script src="js/shaders/post-composite.js?v=2"></script>
+<script src="js/shaders/post-extras.js?v=2"></script>
 
 <!-- Data -->
-<script src="js/data/palettes.js"></script>
-<script src="js/data/easing.js"></script>
-<script src="js/data/presets.js"></script>
+<script src="js/data/palettes.js?v=2"></script>
+<script src="js/data/easing.js?v=2"></script>
 
 <!-- Core Engine -->
-<script src="js/core/gl-engine.js"></script>
-<script src="js/core/layer-compositor.js"></script>
-<script src="js/core/post-processing.js"></script>
-<script src="js/core/render-pipeline.js"></script>
+<script src="js/core/gl-engine.js?v=2"></script>
+<script src="js/core/post-processing.js?v=2"></script>
+<script src="js/core/render-pipeline.js?v=2"></script>
 
 <!-- Systems -->
-<script src="js/systems/state.js"></script>
-<script src="js/systems/history.js"></script>
-<script src="js/systems/timeline-engine.js"></script>
-<script src="js/systems/audio.js"></script>
-<script src="js/systems/gif-encoder.js"></script>
-<script src="js/systems/export.js"></script>
-<script src="js/systems/project.js"></script>
+<script src="js/systems/state.js?v=2"></script>
+<script src="js/systems/history.js?v=2"></script>
+<script src="js/systems/timeline-engine.js?v=2"></script>
+<script src="js/systems/gif-encoder.js?v=2"></script>
+<script src="js/systems/export.js?v=2"></script>
+<script src="js/systems/project.js?v=2"></script>
 
 <!-- UI (order matters: dependencies first) -->
-<script src="js/ui/toasts.js"></script>
-<script src="js/ui/shortcuts.js"></script>
-<script src="js/ui/drag-drop.js"></script>
-<script src="js/ui/context-menu.js"></script>
-<script src="js/ui/toolbar.js"></script>
-<script src="js/ui/command-palette.js"></script>
-<script src="js/ui/pattern-browser.js"></script>
-<script src="js/ui/palette-editor.js"></script>
-<script src="js/ui/layer-panel.js"></script>
-<script src="js/ui/properties-panel.js"></script>
-<script src="js/ui/timeline-ui.js"></script>
-<script src="js/ui/modals.js"></script>
-<script src="js/ui/preset-browser.js"></script>
+<script src="js/ui/toasts.js?v=2"></script>
+<script src="js/ui/shortcuts.js?v=2"></script>
+<script src="js/ui/context-menu.js?v=2"></script>
+<script src="js/ui/toolbar.js?v=2"></script>
+<script src="js/ui/command-palette.js?v=2"></script>
+<script src="js/ui/pattern-browser.js?v=2"></script>
+<script src="js/ui/palette-editor.js?v=2"></script>
+<script src="js/ui/properties-panel.js?v=2"></script>
+<script src="js/ui/timeline-ui.js?v=2"></script>
+<script src="js/ui/modals.js?v=2"></script>
 
 <!-- App init (LAST) -->
-<script src="js/ui/app.js"></script>
+<script src="js/ui/app.js?v=2"></script>
 
 </body>
 </html>

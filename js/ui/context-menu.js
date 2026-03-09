@@ -14,40 +14,20 @@
                 Studio.UI.ContextMenu.hide();
             });
             document.addEventListener('contextmenu', function(e) {
-                // Only intercept on specific areas
-                if (!e.target.closest('.layer-item') && !e.target.closest('.canvas-area')) return;
+                if (!e.target.closest('.canvas-area')) return;
                 e.preventDefault();
 
-                var items = [];
-
-                if (e.target.closest('.layer-item')) {
-                    var layerEl = e.target.closest('.layer-item');
-                    var idx = parseInt(layerEl.dataset.index, 10);
-                    items = [
-                        { label: 'Duplicate Layer', action: function() { Studio.Systems.State.duplicateLayer(idx); } },
-                        { label: 'Delete Layer', action: function() { Studio.Systems.State.removeLayer(idx); }, disabled: Studio.Systems.State.layers.length <= 1 },
-                        { type: 'separator' },
-                        { label: 'Move Up', action: function() { Studio.Systems.State.moveLayer(idx, idx - 1); }, disabled: idx === 0 },
-                        { label: 'Move Down', action: function() { Studio.Systems.State.moveLayer(idx, idx + 1); }, disabled: idx >= Studio.Systems.State.layers.length - 1 },
-                        { type: 'separator' },
-                        { label: 'Toggle Visibility', action: function() {
-                            var l = Studio.Systems.State.layers[idx];
-                            if (l) { l.visible = !l.visible; Studio.Events.emit('state:layersChanged'); }
-                        }}
-                    ];
-                } else if (e.target.closest('.canvas-area')) {
-                    items = [
-                        { label: 'Fullscreen', action: function() { Studio.Events.emit('toolbar:fullscreen'); } },
-                        { label: 'Export PNG', action: function() { Studio.Events.emit('modal:export'); } },
-                        { type: 'separator' },
-                        { label: 'Randomize Seed', action: function() {
-                            var layer = Studio.Systems.State.getSelectedLayer();
-                            if (layer) {
-                                Studio.Systems.State.updateLayerParam(Studio.Systems.State.selectedLayerIndex, 'seed', Math.random() * 1000);
-                            }
-                        }}
-                    ];
-                }
+                var items = [
+                    { label: 'Fullscreen', action: function() { Studio.Events.emit('toolbar:fullscreen'); } },
+                    { label: 'Export PNG', action: function() { Studio.Events.emit('modal:export'); } },
+                    { type: 'separator' },
+                    { label: 'Randomize Seed', action: function() {
+                        var layer = Studio.Systems.State.getSelectedLayer();
+                        if (layer) {
+                            Studio.Systems.State.updateLayerParam(Studio.Systems.State.selectedLayerIndex, 'seed', Math.random() * 1000);
+                        }
+                    }}
+                ];
 
                 if (items.length > 0) {
                     Studio.UI.ContextMenu.show(e.clientX, e.clientY, items);

@@ -8,23 +8,12 @@
         { key: 'seed', label: 'Seed', min: 0, max: 1000, step: 0.1, default: 0 },
         { key: 'scale', label: 'Scale', min: 0.1, max: 20, step: 0.1, default: 1 },
         { key: 'warp', label: 'Warp', min: 0, max: 5, step: 0.01, default: 0 },
-        { key: 'speed', label: 'Animation Speed', min: 0, max: 5, step: 0.1, default: 1 },
-        { key: 'complexity', label: 'Complexity', min: 0.1, max: 10, step: 0.1, default: 1 },
-        { key: 'brightness', label: 'Brightness', min: 0, max: 2, step: 0.01, default: 1 },
-        { key: 'contrast', label: 'Contrast', min: 0, max: 2, step: 0.01, default: 1 }
+        { key: 'grain', label: 'Grain', min: 0, max: 1, step: 0.01, default: 0 }
     ];
 
     var POSTFX_PARAMS = [
-        { key: 'bloom', label: 'Bloom', min: 0, max: 2, step: 0.01, default: 0 },
-        { key: 'bloomRadius', label: 'Bloom Radius', min: 0.1, max: 4, step: 0.1, default: 1 },
-        { key: 'chromatic', label: 'Chromatic Aberration', min: 0, max: 0.05, step: 0.001, default: 0 },
-        { key: 'vignette', label: 'Vignette', min: 0, max: 1, step: 0.01, default: 0.2 },
         { key: 'filmGrain', label: 'Film Grain', min: 0, max: 0.5, step: 0.01, default: 0.02 },
-        { key: 'sharpen', label: 'Sharpen', min: 0, max: 2, step: 0.01, default: 0 },
-        { key: 'lensDistortion', label: 'Lens Distortion', min: -0.5, max: 0.5, step: 0.01, default: 0 },
-        { key: 'shadowTint', label: 'Shadow Tint', type: 'color', default: '#1a1a2e' },
-        { key: 'highlightTint', label: 'Highlight Tint', type: 'color', default: '#fffff0' },
-        { key: 'colorGrading', label: 'Color Grading', min: 0, max: 1, step: 0.01, default: 0 }
+        { key: 'sharpen', label: 'Sharpen', min: 0, max: 2, step: 0.01, default: 0 }
     ];
 
     Studio.UI.PropertiesPanel = {

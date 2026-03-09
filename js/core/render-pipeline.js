@@ -39,8 +39,6 @@
             gl.uniform1f(eng.getUniform(prog, 'u_scale'), params.scale);
             gl.uniform1f(eng.getUniform(prog, 'u_warp'), params.warp);
             gl.uniform1f(eng.getUniform(prog, 'u_grain'), params.grain || 0);
-            gl.uniform1f(eng.getUniform(prog, 'u_bloom'), 0);
-            gl.uniform1f(eng.getUniform(prog, 'u_vignette'), 0);
             gl.uniform2f(eng.getUniform(prog, 'u_focal'), 0.382, 0.45);
 
             for (var i = 0; i < 5; i++) {
@@ -69,15 +67,6 @@
                 }
             }
 
-            // Apply audio reactivity
-            var audio = Studio.Systems.Audio;
-            if (audio) {
-                var pn = ['seed', 'scale', 'warp', 'grain'];
-                for (var j = 0; j < pn.length; j++) {
-                    params[pn[j]] = audio.applyToParam(pn[j], params[pn[j]], layer.id);
-                }
-            }
-
             return params;
         },
 
@@ -87,40 +76,26 @@
 
             var eng = Studio.Core.GLEngine;
             var state = Studio.Systems.State;
-            var layers = state.layers;
-            if (!layers || layers.length === 0) return;
+            var layer = state.layers[0];
+            if (!layer || !layer.visible) return;
             var w = Studio.canvas.width;
             var h = Studio.canvas.height;
             if (w === 0 || h === 0) return;
             var time = overrideTime !== undefined ? overrideTime : anim.time;
 
-            // Ensure FBOs
-            Studio.Core.LayerCompositor.ensureFBOs(gl, layers.length, w, h);
+            // Ensure FBO for layer render
             Studio.Core.PostProcessing.ensureFBOs(gl, w, h);
+            var fbo = Studio.Core.PostProcessing.getLayerFBO();
 
-            // Render each layer to its FBO
-            for (var i = 0; i < layers.length; i++) {
-                if (!layers[i].visible) continue;
-                var layer = layers[i];
-                var params = this.resolveParams(layer, time);
-                var colors = state.getColors(layer);
-                var fbo = Studio.Core.LayerCompositor.getLayerFBO(i);
-                if (!fbo) continue;
-
-                gl.bindFramebuffer(gl.FRAMEBUFFER, fbo.fb);
-                gl.viewport(0, 0, w, h);
-                this.renderPattern(layer.patternIndex, params, colors, w, h, time);
-            }
-
-            // Composite layers
-            var compositedFBO = Studio.Core.LayerCompositor.composite(gl, layers);
-            if (!compositedFBO) return;
-
-            // Apply bloom
-            var bloomResult = Studio.Core.PostProcessing.applyBloom(gl, compositedFBO, state.postFx.bloom);
+            // Render pattern to FBO
+            gl.bindFramebuffer(gl.FRAMEBUFFER, fbo.fb);
+            gl.viewport(0, 0, w, h);
+            var params = this.resolveParams(layer, time);
+            var colors = state.getColors(layer);
+            this.renderPattern(layer.patternIndex, params, colors, w, h, time);
 
             // Final composite to screen
-            Studio.Core.PostProcessing.applyComposite(gl, bloomResult || compositedFBO, w, h, time);
+            Studio.Core.PostProcessing.applyComposite(gl, fbo, w, h, time);
         },
 
         _tick: function(now) {
@@ -144,8 +119,6 @@
                 anim.lastFrame = now;
 
                 Studio.Events.emit('render:frame', anim.time);
-
-                if (Studio.Systems.Audio) Studio.Systems.Audio.update();
 
                 Studio.Core.GLEngine.resizeCanvas();
                 self.render();

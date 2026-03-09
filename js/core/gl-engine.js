@@ -112,19 +112,12 @@
             var vs = Studio.Shaders.Vertex;
 
             // Pattern programs
-            var allPatterns = (Studio.Shaders.PatternsClassic || []).concat(Studio.Shaders.PatternsExtended || []);
+            var allPatterns = Studio.Shaders.PatternsClassic || [];
             this._patternPrograms = [];
             for (var i = 0; i < allPatterns.length; i++) {
                 var prog = this.buildProgram(vs, common + allPatterns[i].frag);
                 this._patternPrograms.push(prog);
             }
-
-            // Blend mode program
-            this._blendProg = this.buildProgram(Studio.Shaders.Vertex, Studio.Shaders.BlendModes.fragment);
-
-            // Bloom programs
-            this._bloomDownProg = this.buildProgram(Studio.Shaders.Vertex, Studio.Shaders.PostBloom.downsample);
-            this._bloomUpProg = this.buildProgram(Studio.Shaders.Vertex, Studio.Shaders.PostBloom.upsample);
 
             // Composite program
             this._compositeProg = this.buildProgram(Studio.Shaders.Vertex, Studio.Shaders.PostComposite.fragment);
@@ -145,7 +138,7 @@
         },
 
         getAllPatterns: function() {
-            return (Studio.Shaders.PatternsClassic || []).concat(Studio.Shaders.PatternsExtended || []);
+            return Studio.Shaders.PatternsClassic || [];
         },
 
         resizeCanvas: function() {

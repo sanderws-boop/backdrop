@@ -31,30 +31,6 @@
                 Studio.Systems.History.redo();
             }});
 
-            // Layers
-            shortcuts.push({ key: 'n', ctrl: true, desc: 'New Layer', action: function() {
-                Studio.Systems.State.addLayer();
-            }});
-            shortcuts.push({ key: 'Backspace', desc: 'Delete Layer', action: function() {
-                var idx = Studio.Systems.State.selectedLayerIndex;
-                if (Studio.Systems.State.layers.length > 1) {
-                    Studio.Systems.State.removeLayer(idx);
-                }
-            }});
-            shortcuts.push({ key: 'd', ctrl: true, desc: 'Duplicate Layer', action: function() {
-                Studio.Systems.State.duplicateLayer(Studio.Systems.State.selectedLayerIndex);
-            }});
-
-            // Navigation
-            shortcuts.push({ key: 'ArrowUp', desc: 'Previous Layer', action: function() {
-                var idx = Studio.Systems.State.selectedLayerIndex;
-                if (idx > 0) Studio.Systems.State.selectLayer(idx - 1);
-            }});
-            shortcuts.push({ key: 'ArrowDown', desc: 'Next Layer', action: function() {
-                var idx = Studio.Systems.State.selectedLayerIndex;
-                if (idx < Studio.Systems.State.layers.length - 1) Studio.Systems.State.selectLayer(idx + 1);
-            }});
-
             // Tools
             shortcuts.push({ key: 'k', ctrl: true, desc: 'Command Palette', action: function() {
                 Studio.Events.emit('commandPalette:toggle');

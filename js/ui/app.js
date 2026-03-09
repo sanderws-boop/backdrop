@@ -41,16 +41,13 @@
                 ['Toasts', Studio.UI.Toasts],
                 ['Toolbar', Studio.UI.Toolbar],
                 ['Shortcuts', Studio.UI.Shortcuts],
-                ['DragDrop', Studio.UI.DragDrop],
                 ['ContextMenu', Studio.UI.ContextMenu],
                 ['PatternBrowser', Studio.UI.PatternBrowser],
                 ['PaletteEditor', Studio.UI.PaletteEditor],
-                ['LayerPanel', Studio.UI.LayerPanel],
                 ['PropertiesPanel', Studio.UI.PropertiesPanel],
                 ['TimelineUI', Studio.UI.TimelineUI],
                 ['Modals', Studio.UI.Modals],
-                ['CommandPalette', Studio.UI.CommandPalette],
-                ['PresetBrowser', Studio.UI.PresetBrowser]
+                ['CommandPalette', Studio.UI.CommandPalette]
             ];
             var uiErrors = 0;
             for (var ci = 0; ci < uiComponents.length; ci++) {
@@ -85,9 +82,6 @@
             canvas.width = canvas.clientWidth * (window.devicePixelRatio || 1);
             canvas.height = canvas.clientHeight * (window.devicePixelRatio || 1);
 
-            // Panel tab switching
-            this._initPanelTabs();
-
             // Try restore session
             try {
                 if (Studio.Systems.Project.restoreSession()) {
@@ -120,31 +114,6 @@
             var shortcutsContent = document.getElementById('shortcuts-content');
             if (shortcutsContent) {
                 shortcutsContent.innerHTML = Studio.UI.Shortcuts.buildHelpContent();
-            }
-        },
-
-        _initPanelTabs: function() {
-            var leftTabs = document.querySelectorAll('.panel-left .panel-tab');
-            var leftPanels = document.querySelectorAll('.panel-left .tab-content');
-            this._setupTabs(leftTabs, leftPanels);
-
-            var rightTabs = document.querySelectorAll('.panel-right .panel-tab');
-            var rightPanels = document.querySelectorAll('.panel-right .tab-content');
-            this._setupTabs(rightTabs, rightPanels);
-        },
-
-        _setupTabs: function(tabs, panels) {
-            for (var i = 0; i < tabs.length; i++) {
-                (function(tab, idx) {
-                    tab.addEventListener('click', function() {
-                        for (var j = 0; j < tabs.length; j++) {
-                            tabs[j].classList.toggle('active', j === idx);
-                        }
-                        for (var k = 0; k < panels.length; k++) {
-                            panels[k].classList.toggle('active', k === idx);
-                        }
-                    });
-                })(tabs[i], i);
             }
         }
     };

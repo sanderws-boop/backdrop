@@ -54,7 +54,6 @@
         _buildCommands: function() {
             var patterns = Studio.Core.GLEngine ? Studio.Core.GLEngine.getAllPatterns() : [];
             var palettes = Studio.Data.Palettes || [];
-            var presets = Studio.Data.Presets || [];
 
             commands = [];
 
@@ -88,25 +87,7 @@
                 })(i, palettes[i]);
             }
 
-            // Preset commands
-            for (var i = 0; i < presets.length; i++) {
-                (function(idx, preset) {
-                    commands.push({
-                        label: 'Preset: ' + preset.name,
-                        category: 'presets',
-                        action: function() {
-                            Studio.Systems.Project.loadPreset(preset);
-                        }
-                    });
-                })(i, presets[i]);
-            }
-
             // Action commands
-            commands.push({ label: 'New Layer', category: 'actions', action: function() { Studio.Systems.State.addLayer(); } });
-            commands.push({ label: 'Delete Layer', category: 'actions', action: function() {
-                if (Studio.Systems.State.layers.length > 1) Studio.Systems.State.removeLayer(Studio.Systems.State.selectedLayerIndex);
-            }});
-            commands.push({ label: 'Duplicate Layer', category: 'actions', action: function() { Studio.Systems.State.duplicateLayer(Studio.Systems.State.selectedLayerIndex); } });
             commands.push({ label: 'Export PNG', category: 'actions', action: function() { Studio.Events.emit('modal:export'); } });
             commands.push({ label: 'Save Project', category: 'actions', action: function() { Studio.Systems.Project.save(); } });
             commands.push({ label: 'Load Project', category: 'actions', action: function() { Studio.Systems.Project.load(); } });
@@ -117,9 +98,6 @@
                 var li = Studio.Systems.State.selectedLayerIndex;
                 Studio.Systems.State.updateLayerParam(li, 'seed', Math.random() * 1000);
                 Studio.Systems.History.push();
-            }});
-            commands.push({ label: 'Toggle Audio Reactivity', category: 'actions', action: function() {
-                Studio.Events.emit('modal:audio');
             }});
             commands.push({ label: 'Show Keyboard Shortcuts', category: 'actions', action: function() {
                 Studio.UI.Shortcuts.toggleHelp();

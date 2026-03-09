@@ -13,7 +13,7 @@
             visible: true,
             patternIndex: patternIndex || 0,
             paletteIndex: paletteIndex !== undefined ? paletteIndex : 0,
-            params: { seed: +(Math.random() * 100).toFixed(1), scale: 2.0, warp: 1.5, grain: 0.0 }
+            params: { seed: +(Math.random() * 100).toFixed(1), scale: 2.0, warp: 1.5 }
         };
     }
 
@@ -23,7 +23,6 @@
 
         postFx: {
             filmGrain: 0.02,
-            sharpen: 0.0,
             grainColor: '#ffffff'
         },
 

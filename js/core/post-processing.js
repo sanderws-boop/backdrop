@@ -31,7 +31,7 @@
             gl.uniform1f(eng.getUniform(prog, 'u_grain'), postFx.filmGrain || 0);
             var gc = Studio.Systems.State.hexToGL(postFx.grainColor || '#ffffff');
             gl.uniform3f(eng.getUniform(prog, 'u_grainColor'), gc[0], gc[1], gc[2]);
-            gl.uniform1f(eng.getUniform(prog, 'u_sharpen'), postFx.sharpen || 0);
+            gl.uniform1f(eng.getUniform(prog, 'u_sharpen'), 0);
             eng.drawQuad(prog);
         }
     };

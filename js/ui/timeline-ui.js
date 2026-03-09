@@ -206,7 +206,7 @@
             }
 
             // Add keyframes for main params
-            var params = ['seed', 'scale', 'warp', 'grain'];
+            var params = ['seed', 'scale', 'warp'];
             for (var i = 0; i < params.length; i++) {
                 var val = layer.params[params[i]];
                 if (val !== undefined) {

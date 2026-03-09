@@ -75,17 +75,19 @@
             var gifBtn = exportModal.querySelector('#btn-export-gif');
             var gifDur = exportModal.querySelector('#gif-duration');
             var gifSize = exportModal.querySelector('#gif-size');
+            var gifFps = exportModal.querySelector('#gif-fps');
             // Sync GIF duration with timeline duration
             if (gifDur) {
                 gifDur.value = Studio.Systems.State.timeline.duration;
             }
             if (gifBtn) {
                 gifBtn.addEventListener('click', function() {
-                    var dur = gifDur ? parseInt(gifDur.value, 10) : 3;
+                    var dur = gifDur ? parseInt(gifDur.value, 10) : 4;
                     var size = gifSize ? parseInt(gifSize.value, 10) : 1280;
+                    var fps = gifFps ? parseInt(gifFps.value, 10) : 15;
                     var h = Math.round(size * 9 / 16);
-                    Studio.UI.Toasts.show('Encoding GIF (' + size + 'x' + h + ', ' + dur + 's)...', 'info');
-                    Studio.Systems.Export.exportGIF(size, 24, dur);
+                    Studio.UI.Toasts.show('Encoding GIF (' + size + 'x' + h + ', ' + dur + 's, ' + fps + 'fps)...', 'info');
+                    Studio.Systems.Export.exportGIF(size, fps, dur);
                     self.closeAll();
                 });
             }
@@ -94,22 +96,26 @@
                 var updateEstimate = function() {
                     var w = parseInt(gifSize.value, 10) || 1280;
                     var h = Math.round(w * 9 / 16);
-                    var dur = parseFloat(gifDur.value) || 3;
-                    var fps = 24;
+                    var dur = parseFloat(gifDur.value) || 4;
+                    var fps = gifFps ? parseInt(gifFps.value, 10) : 15;
                     var frames = Math.ceil(fps * dur);
                     var rawBytes = w * h * frames;
-                    var estBytes = rawBytes * 0.5;
+                    var estBytes = rawBytes * 0.85;
                     var label;
                     if (estBytes >= 1024 * 1024) {
-                        label = '~' + (estBytes / (1024 * 1024)).toFixed(1) + ' MB';
+                        label = '~' + (estBytes / (1024 * 1024)).toFixed(0) + ' MB';
                     } else {
                         label = '~' + Math.round(estBytes / 1024) + ' KB';
                     }
                     var el = exportModal.querySelector('#gif-size-estimate');
-                    if (el) el.textContent = 'Estimated file size: ' + label + ' (' + w + 'x' + h + ', ' + frames + ' frames)';
+                    if (el) {
+                        var warn = estBytes > 50 * 1024 * 1024 ? ' \u26a0\ufe0f Over 50 MB!' : '';
+                        el.textContent = 'Estimated: ' + label + ' (' + frames + ' frames)' + warn;
+                    }
                 };
                 gifSize.addEventListener('change', updateEstimate);
                 gifDur.addEventListener('input', updateEstimate);
+                if (gifFps) gifFps.addEventListener('change', updateEstimate);
                 updateEstimate();
             }
 

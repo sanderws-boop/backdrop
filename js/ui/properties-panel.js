@@ -7,14 +7,12 @@
     var PARAMS = [
         { key: 'seed', label: 'Seed', min: 0, max: 1000, step: 0.1, default: 0 },
         { key: 'scale', label: 'Scale', min: 0.1, max: 20, step: 0.1, default: 1 },
-        { key: 'warp', label: 'Warp', min: 0, max: 5, step: 0.01, default: 0 },
-        { key: 'grain', label: 'Grain', min: 0, max: 1, step: 0.01, default: 0 }
+        { key: 'warp', label: 'Warp', min: 0, max: 5, step: 0.01, default: 0 }
     ];
 
     var POSTFX_PARAMS = [
         { key: 'filmGrain', label: 'Film Grain', min: 0, max: 0.5, step: 0.01, default: 0.02 },
-        { key: 'grainColor', label: 'Grain Color', type: 'color', default: '#ffffff' },
-        { key: 'sharpen', label: 'Sharpen', min: 0, max: 2, step: 0.01, default: 0 }
+        { key: 'grainColor', label: 'Grain Color', type: 'color', default: '#ffffff' }
     ];
 
     Studio.UI.PropertiesPanel = {

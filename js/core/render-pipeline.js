@@ -113,8 +113,12 @@
                     var tl = Studio.Systems.State.timeline;
                     if (tl.looping && tl.duration > 0) {
                         anim.time = anim.time % tl.duration;
-                    } else if (tl.duration > 0) {
-                        anim.time = Math.min(anim.time, tl.duration);
+                        self._loopDuration = tl.duration;
+                    } else {
+                        self._loopDuration = 0;
+                        if (tl.duration > 0) {
+                            anim.time = Math.min(anim.time, tl.duration);
+                        }
                     }
 
                     Studio.Systems.State.timeline.currentTime = anim.time;

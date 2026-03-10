@@ -57,8 +57,8 @@
                 hslToHex(h, s*0.15, 96),
                 hslToHex(h, s*0.4, 82),
                 hex,
-                hslToHex(h, s*0.7, 32),
-                hslToHex(h, s*0.5, 10)
+                hslToHex(h, s*0.65, 35),
+                hslToHex(h, s*0.55, 20)
             ];
         }
     }

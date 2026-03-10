@@ -199,11 +199,11 @@
                 { value: 4, label: 'Bottom' }
             ];
             var ratios = [
-                { value: 0.333, label: '1:2' },
-                { value: 0.382, label: 'φ' },
-                { value: 0.5, label: '1:1' },
-                { value: 0.618, label: '1:φ' },
-                { value: 0.667, label: '2:1' }
+                { value: 0.05, label: '5' },
+                { value: 0.08, label: '8' },
+                { value: 0.13, label: '13' },
+                { value: 0.21, label: '21' },
+                { value: 0.34, label: '34' }
             ];
 
             var html = '<div class="param-row"><label class="param-label">Side</label>';

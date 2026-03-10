@@ -2,7 +2,7 @@
     "use strict";
 
     var gridEl, customEl, categoryEl, customBtn;
-    var autoEl, autoBtn, autoColorInput, autoToggleEl;
+    var autoEl, autoBtn, autoColorInput, autoToggleEl, autoModeEl;
 
     // --- HSL helpers ---
     function hexToHSL(hex) {
@@ -41,25 +41,67 @@
         function toHex(c) { var v = Math.round(c*255).toString(16); return v.length===1 ? '0'+v : v; }
         return '#' + toHex(r) + toHex(g) + toHex(b);
     }
-    function generateAutoPalette(hex, isDark) {
+    function generateAutoPalette(hex, isDark, mode) {
         var hsl = hexToHSL(hex);
         var h = hsl[0], s = hsl[1];
-        if (isDark) {
-            return [
-                hslToHex(h, s*0.3, 6),
-                hslToHex(h, s*0.6, 22),
-                hex,
-                hslToHex(h, s*0.5, 72),
-                hslToHex(h, s*0.25, 90)
-            ];
+        mode = mode || 'balanced';
+        if (mode === 'vivid') {
+            // High contrast — bold extremes
+            if (isDark) {
+                return [
+                    hslToHex(h, s*0.2, 3),
+                    hslToHex(h, s*0.8, 18),
+                    hex,
+                    hslToHex(h, s*0.7, 68),
+                    hslToHex(h, s*0.15, 95)
+                ];
+            } else {
+                return [
+                    hslToHex(h, s*0.1, 98),
+                    hslToHex(h, s*0.5, 85),
+                    hex,
+                    hslToHex(h, s*0.85, 25),
+                    hslToHex(h, s*0.6, 8)
+                ];
+            }
+        } else if (mode === 'tonal') {
+            // Subtle — stays close to original color
+            if (isDark) {
+                return [
+                    hslToHex(h, s*0.5, 14),
+                    hslToHex(h, s*0.7, 28),
+                    hex,
+                    hslToHex(h, s*0.6, 58),
+                    hslToHex(h, s*0.45, 72)
+                ];
+            } else {
+                return [
+                    hslToHex(h, s*0.25, 92),
+                    hslToHex(h, s*0.45, 78),
+                    hex,
+                    hslToHex(h, s*0.55, 42),
+                    hslToHex(h, s*0.45, 30)
+                ];
+            }
         } else {
-            return [
-                hslToHex(h, s*0.15, 96),
-                hslToHex(h, s*0.4, 82),
-                hex,
-                hslToHex(h, s*0.65, 35),
-                hslToHex(h, s*0.55, 20)
-            ];
+            // Balanced (default) — safe, professional
+            if (isDark) {
+                return [
+                    hslToHex(h, s*0.3, 6),
+                    hslToHex(h, s*0.6, 22),
+                    hex,
+                    hslToHex(h, s*0.5, 72),
+                    hslToHex(h, s*0.25, 90)
+                ];
+            } else {
+                return [
+                    hslToHex(h, s*0.15, 96),
+                    hslToHex(h, s*0.4, 82),
+                    hex,
+                    hslToHex(h, s*0.65, 35),
+                    hslToHex(h, s*0.55, 20)
+                ];
+            }
         }
     }
 
@@ -74,6 +116,7 @@
             autoBtn = document.getElementById('btn-auto-palette');
             autoColorInput = document.getElementById('auto-main-color');
             autoToggleEl = document.getElementById('auto-theme-toggle');
+            autoModeEl = document.getElementById('auto-mode-toggle');
 
             this.render();
 
@@ -86,7 +129,6 @@
                     var layer = Studio.Systems.State.getSelectedLayer();
                     if (!layer) return;
                     delete layer.autoColor;
-                    delete layer.autoTheme;
                     if (!layer.colors) {
                         var pal = Studio.Data.Palettes[layer.paletteIndex];
                         layer.colors = pal ? pal.colors.slice() : ['#000000','#333333','#666666','#999999','#cccccc'];
@@ -104,7 +146,7 @@
                         layer.autoColor = autoColorInput ? autoColorInput.value : '#6366f1';
                         layer.autoTheme = 'dark';
                     }
-                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark');
+                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark', layer.autoMode);
                     Studio.Events.emit('state:layersChanged');
                 });
             }
@@ -115,7 +157,7 @@
                     var layer = Studio.Systems.State.getSelectedLayer();
                     if (!layer || !layer.autoColor) return;
                     layer.autoColor = autoColorInput.value;
-                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark');
+                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark', layer.autoMode);
                     Studio.Events.emit('state:layersChanged');
                 });
                 autoColorInput.addEventListener('change', function() {
@@ -123,15 +165,31 @@
                 });
             }
 
-            // Auto theme toggle
+            // Theme toggle (universal — works for all palette modes)
             if (autoToggleEl) {
                 autoToggleEl.addEventListener('click', function(e) {
                     var btn = e.target.closest('.auto-theme-btn');
                     if (!btn) return;
                     var layer = Studio.Systems.State.getSelectedLayer();
-                    if (!layer || !layer.autoColor) return;
+                    if (!layer) return;
                     layer.autoTheme = btn.dataset.theme;
-                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark');
+                    if (layer.autoColor) {
+                        layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark', layer.autoMode);
+                    }
+                    Studio.Events.emit('state:layersChanged');
+                    Studio.Systems.History.push();
+                });
+            }
+
+            // Auto mode toggle (Balanced / Vivid / Tonal)
+            if (autoModeEl) {
+                autoModeEl.addEventListener('click', function(e) {
+                    var btn = e.target.closest('.auto-theme-btn');
+                    if (!btn || !btn.dataset.mode) return;
+                    var layer = Studio.Systems.State.getSelectedLayer();
+                    if (!layer || !layer.autoColor) return;
+                    layer.autoMode = btn.dataset.mode;
+                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark', layer.autoMode);
                     Studio.Events.emit('state:layersChanged');
                     Studio.Systems.History.push();
                 });
@@ -259,6 +317,14 @@
                 var btns = autoToggleEl.querySelectorAll('.auto-theme-btn');
                 for (var ti = 0; ti < btns.length; ti++) {
                     btns[ti].classList.toggle('active', btns[ti].dataset.theme === theme);
+                }
+            }
+            // Sync auto mode toggle
+            if (autoModeEl && layer) {
+                var mode = layer.autoMode || 'balanced';
+                var mBtns = autoModeEl.querySelectorAll('.auto-theme-btn');
+                for (var mi = 0; mi < mBtns.length; mi++) {
+                    mBtns[mi].classList.toggle('active', mBtns[mi].dataset.mode === mode);
                 }
             }
 

@@ -73,6 +73,8 @@
             if (!layer) return;
             layer.paletteIndex = paletteIndex;
             delete layer.colors;
+            delete layer.autoColor;
+            delete layer.autoTheme;
             Studio.Events.emit('state:layersChanged');
         },
 

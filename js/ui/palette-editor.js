@@ -2,6 +2,66 @@
     "use strict";
 
     var gridEl, customEl, categoryEl, customBtn;
+    var autoEl, autoBtn, autoColorInput, autoToggleEl;
+
+    // --- HSL helpers ---
+    function hexToHSL(hex) {
+        var r = parseInt(hex.slice(1,3),16)/255;
+        var g = parseInt(hex.slice(3,5),16)/255;
+        var b = parseInt(hex.slice(5,7),16)/255;
+        var max = Math.max(r,g,b), min = Math.min(r,g,b);
+        var h=0, s=0, l=(max+min)/2;
+        if (max !== min) {
+            var d = max - min;
+            s = l > 0.5 ? d/(2-max-min) : d/(max+min);
+            if (max === r) h = ((g-b)/d + (g<b?6:0))/6;
+            else if (max === g) h = ((b-r)/d + 2)/6;
+            else h = ((r-g)/d + 4)/6;
+        }
+        return [h*360, s*100, l*100];
+    }
+    function hslToHex(h, s, l) {
+        h /= 360; s /= 100; l /= 100;
+        var r, g, b;
+        if (s === 0) { r = g = b = l; }
+        else {
+            function hue2rgb(p, q, t) {
+                if (t < 0) t += 1; if (t > 1) t -= 1;
+                if (t < 1/6) return p + (q-p)*6*t;
+                if (t < 1/2) return q;
+                if (t < 2/3) return p + (q-p)*(2/3-t)*6;
+                return p;
+            }
+            var q = l < 0.5 ? l*(1+s) : l+s-l*s;
+            var p = 2*l - q;
+            r = hue2rgb(p, q, h + 1/3);
+            g = hue2rgb(p, q, h);
+            b = hue2rgb(p, q, h - 1/3);
+        }
+        function toHex(c) { var v = Math.round(c*255).toString(16); return v.length===1 ? '0'+v : v; }
+        return '#' + toHex(r) + toHex(g) + toHex(b);
+    }
+    function generateAutoPalette(hex, isDark) {
+        var hsl = hexToHSL(hex);
+        var h = hsl[0], s = hsl[1];
+        if (isDark) {
+            return [
+                hslToHex(h, s*0.3, 6),
+                hslToHex(h, s*0.6, 22),
+                hex,
+                hslToHex(h, s*0.5, 72),
+                hslToHex(h, s*0.25, 90)
+            ];
+        } else {
+            return [
+                hslToHex(h, s*0.15, 96),
+                hslToHex(h, s*0.4, 82),
+                hex,
+                hslToHex(h, s*0.7, 32),
+                hslToHex(h, s*0.5, 10)
+            ];
+        }
+    }
 
     Studio.UI.PaletteEditor = {
         init: function() {
@@ -10,6 +70,10 @@
             customEl = document.getElementById('custom-colors');
             categoryEl = document.getElementById('palette-categories');
             customBtn = document.getElementById('btn-custom-palette');
+            autoEl = document.getElementById('auto-colors');
+            autoBtn = document.getElementById('btn-auto-palette');
+            autoColorInput = document.getElementById('auto-main-color');
+            autoToggleEl = document.getElementById('auto-theme-toggle');
 
             this.render();
 
@@ -21,12 +85,55 @@
                 customBtn.addEventListener('click', function() {
                     var layer = Studio.Systems.State.getSelectedLayer();
                     if (!layer) return;
-                    // If not already custom, copy current palette colors to layer.colors
+                    delete layer.autoColor;
+                    delete layer.autoTheme;
                     if (!layer.colors) {
                         var pal = Studio.Data.Palettes[layer.paletteIndex];
                         layer.colors = pal ? pal.colors.slice() : ['#000000','#333333','#666666','#999999','#cccccc'];
                     }
                     Studio.Events.emit('state:layersChanged');
+                });
+            }
+
+            // Auto palette button
+            if (autoBtn) {
+                autoBtn.addEventListener('click', function() {
+                    var layer = Studio.Systems.State.getSelectedLayer();
+                    if (!layer) return;
+                    if (!layer.autoColor) {
+                        layer.autoColor = autoColorInput ? autoColorInput.value : '#6366f1';
+                        layer.autoTheme = 'dark';
+                    }
+                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark');
+                    Studio.Events.emit('state:layersChanged');
+                });
+            }
+
+            // Auto color input
+            if (autoColorInput) {
+                autoColorInput.addEventListener('input', function() {
+                    var layer = Studio.Systems.State.getSelectedLayer();
+                    if (!layer || !layer.autoColor) return;
+                    layer.autoColor = autoColorInput.value;
+                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark');
+                    Studio.Events.emit('state:layersChanged');
+                });
+                autoColorInput.addEventListener('change', function() {
+                    Studio.Systems.History.push();
+                });
+            }
+
+            // Auto theme toggle
+            if (autoToggleEl) {
+                autoToggleEl.addEventListener('click', function(e) {
+                    var btn = e.target.closest('.auto-theme-btn');
+                    if (!btn) return;
+                    var layer = Studio.Systems.State.getSelectedLayer();
+                    if (!layer || !layer.autoColor) return;
+                    layer.autoTheme = btn.dataset.theme;
+                    layer.colors = generateAutoPalette(layer.autoColor, layer.autoTheme === 'dark');
+                    Studio.Events.emit('state:layersChanged');
+                    Studio.Systems.History.push();
                 });
             }
 
@@ -110,9 +217,12 @@
             }
             gridEl.innerHTML = html;
 
+            var isAuto = layer && !!layer.autoColor;
+            var isManualCustom = isCustom && !isAuto;
+
             // Update Custom button state and gradient
             if (customBtn) {
-                customBtn.classList.toggle('active', !!isCustom);
+                customBtn.classList.toggle('active', isManualCustom);
                 if (isCustom) {
                     var cGrad = 'linear-gradient(90deg';
                     for (var ci = 0; ci < layer.colors.length; ci++) cGrad += ', ' + layer.colors[ci];
@@ -126,6 +236,29 @@
                         pGrad += ')';
                         customBtn.style.background = pGrad;
                     }
+                }
+            }
+
+            // Update Auto button state and gradient
+            if (autoBtn) {
+                autoBtn.classList.toggle('active', isAuto);
+                if (isAuto && layer.colors) {
+                    var aGrad = 'linear-gradient(90deg';
+                    for (var ai = 0; ai < layer.colors.length; ai++) aGrad += ', ' + layer.colors[ai];
+                    aGrad += ')';
+                    autoBtn.style.background = aGrad;
+                }
+            }
+            // Sync auto color input
+            if (autoColorInput && layer) {
+                autoColorInput.value = layer.autoColor || '#6366f1';
+            }
+            // Sync auto theme toggle
+            if (autoToggleEl && layer) {
+                var theme = layer.autoTheme || 'dark';
+                var btns = autoToggleEl.querySelectorAll('.auto-theme-btn');
+                for (var ti = 0; ti < btns.length; ti++) {
+                    btns[ti].classList.toggle('active', btns[ti].dataset.theme === theme);
                 }
             }
 

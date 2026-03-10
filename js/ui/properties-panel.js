@@ -220,6 +220,19 @@
                         '" data-split-ratio="' + ratios[j].value + '">' + ratios[j].label + '</button>';
                 }
                 html += '</div></div>';
+
+                // Custom percentage slider
+                var pct = Math.round(ratio * 100);
+                var sliderPct = ((ratio - 0.05) / (0.95 - 0.05)) * 100;
+                html += '<div class="param-row">';
+                html += '<div class="param-controls">';
+                html += '<input type="range" class="slider" id="split-ratio-slider" ' +
+                    'min="5" max="95" step="1" value="' + pct + '" ' +
+                    'style="--pct: ' + sliderPct + '%">';
+                html += '<input type="number" class="param-value" id="split-ratio-number" ' +
+                    'min="5" max="95" step="1" value="' + pct + '">';
+                html += '<span style="font-size:10px;color:var(--text-tertiary);margin-left:-2px">%</span>';
+                html += '</div></div>';
             }
 
             return html;
@@ -253,6 +266,48 @@
                         self.render();
                     });
                 })(ratioBtns[j]);
+            }
+
+            // Custom ratio slider + number input
+            var ratioSlider = document.getElementById('split-ratio-slider');
+            var ratioNumber = document.getElementById('split-ratio-number');
+            if (ratioSlider) {
+                ratioSlider.addEventListener('input', function() {
+                    var pct = parseFloat(ratioSlider.value);
+                    var val = pct / 100;
+                    if (ratioNumber) ratioNumber.value = Math.round(pct);
+                    ratioSlider.style.setProperty('--pct', ((pct - 5) / 90) * 100 + '%');
+                    var li = Studio.Systems.State.selectedLayerIndex;
+                    Studio.Systems.State.updateLayerParam(li, 'splitRatio', val);
+                    // Deactivate preset buttons
+                    var btns = containerEl.querySelectorAll('[data-split-ratio]');
+                    for (var b = 0; b < btns.length; b++) {
+                        btns[b].classList.toggle('active', Math.abs(parseFloat(btns[b].dataset.splitRatio) - val) < 0.01);
+                    }
+                });
+                ratioSlider.addEventListener('change', function() {
+                    Studio.Systems.History.push();
+                });
+            }
+            if (ratioNumber) {
+                ratioNumber.addEventListener('input', function() {
+                    var pct = parseFloat(ratioNumber.value);
+                    if (isNaN(pct) || pct < 5 || pct > 95) return;
+                    var val = pct / 100;
+                    if (ratioSlider) {
+                        ratioSlider.value = pct;
+                        ratioSlider.style.setProperty('--pct', ((pct - 5) / 90) * 100 + '%');
+                    }
+                    var li = Studio.Systems.State.selectedLayerIndex;
+                    Studio.Systems.State.updateLayerParam(li, 'splitRatio', val);
+                    var btns = containerEl.querySelectorAll('[data-split-ratio]');
+                    for (var b = 0; b < btns.length; b++) {
+                        btns[b].classList.toggle('active', Math.abs(parseFloat(btns[b].dataset.splitRatio) - val) < 0.01);
+                    }
+                });
+                ratioNumber.addEventListener('change', function() {
+                    Studio.Systems.History.push();
+                });
             }
         },
 
